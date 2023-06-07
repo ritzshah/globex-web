@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { ActionInfo, Activity, UserActivityModel, UserInfo } from './models/user-activity.model';
@@ -6,7 +7,7 @@ import { GlobexConstants } from './core/constants/globex.constants';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HandleError, HttpErrorHandler } from './http-error-handler.service';
-import { catchError, Observable } from 'rxjs';
+import { catchError, Observable, timestamp } from 'rxjs';
 import serverEnvConfig from 'client.env.config';
 
 @Injectable({
@@ -23,7 +24,7 @@ export class CoolstoreCookiesService {
   userActivityObj;
 
 
-  constructor(cookieService: CookieService, private route: ActivatedRoute, http: HttpClient, httpErrorHandler: HttpErrorHandler) {
+  constructor(cookieService: CookieService, private route: ActivatedRoute, http: HttpClient, httpErrorHandler: HttpErrorHandler, private toastr: ToastrService) {
     this.cookieService = cookieService;
     this.http = http;
     this.handleError = httpErrorHandler.createHandleError('CoolstoreCookiesService');
@@ -98,6 +99,47 @@ export class CoolstoreCookiesService {
 
         this.saveUserActivityPost().subscribe(response => {});
 
+  }
+
+  submitReview(product,reviewText) {
+    product.liked = true;
+    let prodReviewObj = {
+      "product_id": product.itemId,
+      "user": {
+        "name": "Alison Silva",
+        "customer_id": "asilva",
+        "browser": "Chrome",
+        "region": "India"
+      },
+      "rating": 0,
+      "timestamp": Date.now(),
+      "review_text": reviewText
+      
+    }
+
+    this.saveReview(prodReviewObj).subscribe(response => {
+        console.log("CoolstoreService >> submitReview >> resonse", response)
+        this.toastr.success('Your review has been submitted!', 'Thank you');
+
+    });
+  }
+
+  saveReview(prodReviewObj): Observable<any> {
+    return this.http.post<any>(serverEnvConfig.ANGULR_API_SAVE_PROD_REVIEW, prodReviewObj)
+      .pipe(catchError(this.handleError('prodReviewObj', prodReviewObj)));
+  }
+
+  fetchReview(itemId) {
+    this.getReviews(itemId).subscribe(response => {
+        console.log("CoolstoreService >> submitReview >> resonse", response)
+        return response;
+
+    });
+  }
+
+  getReviews(itemId): Observable<any> {
+    return this.http.get<any>(serverEnvConfig.ANGULR_API_FETCH_PROD_REVIEW + "/" + itemId)
+      .pipe(catchError(this.handleError('prodReviewObj', itemId)));
   }
 
 

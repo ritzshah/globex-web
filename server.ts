@@ -33,6 +33,8 @@ export function app(): express.Express {
   const ANGULR_API_GETPAGINATEDPRODUCTS_LIMIT = 8;
   const ANGULR_API_GETRECOMMENDEDPRODUCTS =  '/api/getRecommendedProducts';
   const ANGULR_API_TRACKUSERACTIVITY = '/api/trackUserActivity';
+  const ANGULR_API_SAVE_PROD_REVIEW = '/api/saveProductReview';
+  const ANGULR_API_FETCH_PROD_REVIEW = '/api/fetchProductReview';
   const ANGULR_API_GETPRODUCTDETAILS_FOR_IDS = '/api/getProductDetailsForIds';
   const ANGULR_HEALTH = '/health';
   const ANGULR_API_CART = '/api/cart';
@@ -53,6 +55,8 @@ export function app(): express.Express {
   // external micro services typically running on OpenShift
   const API_MANAGEMENT_FLAG = get('API_MANAGEMENT_FLAG').default("NO").asString();
   const API_TRACK_USERACTIVITY = get('API_TRACK_USERACTIVITY').default('http://d8523dbb-977d-4d5c-be98-aef3da676192.mock.pstmn.io/track').asString();
+  const API_SAVE_PROD_REVIEW = get('API_SAVE_PROD_REVIEW').default('http://localhost:8080/review/submit').asString();
+  const API_FETCH_PROD_REVIEW = get('API_FETCH_PROD_REVIEW').default('http://localhost:8080/review/fetch').asString();
   const API_GET_PAGINATED_PRODUCTS = get('API_GET_PAGINATED_PRODUCTS').default('http://3ea8ea3c-2bc9-45ae-9dc9-73aad7d8eafb.mock.pstmn.io/services/products').asString();
   const API_GET_PRODUCT_DETAILS_BY_IDS = get('API_GET_PRODUCT_DETAILS_BY_IDS').default('http://3ea8ea3c-2bc9-45ae-9dc9-73aad7d8eafb.mock.pstmn.io/services/product/list/').asString();
   const API_CATALOG_RECOMMENDED_PRODUCT_IDS = get('API_CATALOG_RECOMMENDED_PRODUCT_IDS').default('http://e327d0a8-a4cc-4e60-8707-51a295f04f76.mock.pstmn.io/score/product').asString();
@@ -203,6 +207,83 @@ export function app(): express.Express {
         }
       );
   });
+
+  // submit produdct review
+  server.post(ANGULR_API_SAVE_PROD_REVIEW, (req, res) => {
+    console.log("ANGULR_API_SAVE_PROD_REVIEW called")
+    axios
+      .post(API_SAVE_PROD_REVIEW, req.body)
+      .then(response => {
+        console.log("response", response)
+        res.send(response.data);
+      })
+      .catch(
+        (reason: AxiosError<{additionalInfo:string}>) => {
+          if (reason.response!.status === 400) {
+            // Handle 400
+            res.send("error:reason.response!.status " + reason.response!.status);
+          } else {
+            res.send("error:reason.response!.status " + reason.response!.status);
+          }
+          console.log("ANGULR_API_SAVE_PROD_REVIEW AxiosError", reason.message)
+        }
+      );
+  });
+
+  // Get Reviews API call
+  server.get(ANGULR_API_FETCH_PROD_REVIEW + '/:productId', (req, res) => {
+    let productId = req.params.productId;
+    //UNDO TBC
+    let tempReviews = [{
+      "product_id": "3423498",
+      "user": {
+        "name": "Alison Silva",
+        "customer_id": "asilva",
+        "browser": "Chrome",
+        "region": "India"
+      },
+      "rating": 0,
+      "timestamp": "1686139249066",
+      "review_text": "I recently purchased this t-shirt, and I must say, I'm thoroughly impressed! The quality of the fabric is exceptional, and it feels incredibly soft and comfortable against my skin. The fit is perfect, hugging my body in all the right places without being too tight. I love the vibrant color and the stylish design, which definitely makes a statement. The stitching is flawless, indicating excellent craftsmanship. Even after multiple washes, the t-shirt still looks brand new with no signs of fading or shrinking. "
+      
+    },
+    {
+      "product_id": "3423498",
+      "user": {
+        "name": "Gabe Charles",
+        "customer_id": "gcharles",
+        "browser": "Chrome",
+        "region": "India"
+      },
+      "rating": 0,
+      "timestamp": "1686139249766",
+      "review_text": "I have to say I'm quite disappointed with the overall quality. The fabric feels thin and cheap, and it doesn't seem like it will hold up well over time. The fit is also problematic. Despite ordering my usual size, the t-shirt is oddly tight around the shoulders and loose around the waist, resulting in an unflattering and uncomfortable fit. "
+      
+    },
+    {
+      "product_id": "3423498",
+      "user": {
+        "name": "Faye Stoy",
+        "customer_id": "fstoy",
+        "browser": "Chrome",
+        "region": "India"
+      },
+      "rating": 0,
+      "timestamp": "1686113283",
+      "review_text": "my experience with it has been fairly average. The fabric quality is decent, not exceptional but not terrible either. It feels comfortable against the skin, although it could be slightly softer. The fit is alright, neither too tight nor too loose, but it doesn't particularly stand out either. The design is simple and minimalistic, which might appeal to those who prefer a more understated look"
+      
+    }]
+    res.send(tempReviews)
+    return;
+    //UNDO TBC
+    
+    axios.get(API_FETCH_PROD_REVIEW + '/' + productId)
+      .then(response => {
+        
+        res.send(response.data)
+      })
+      .catch(error => console.log("API_FETCH_PROD_REVIEW", error));
+  })
 
   // Get CART API call
   server.get(ANGULR_API_CART + '/:cartId', (req, res) => {

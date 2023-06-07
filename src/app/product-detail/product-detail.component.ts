@@ -24,8 +24,9 @@ export class ProductDetailComponent implements OnInit {
   currentProduct;
   isProductLiked = false;
   testBrowser: boolean;
+  reviewText="";
   
-  constructor(coolStoreService:CoolStoreProductsService, cookieService: CookieService,
+  constructor(coolStoreService:CoolStoreProductsService, cookieService: CookieService, 
     coolstoreCookiesService:CoolstoreCookiesService, cartService:CartService, private route: ActivatedRoute, @Inject(PLATFORM_ID) platformId:string) {
     this.coolStoreService = coolStoreService;
     this.cartService = cartService;
@@ -41,6 +42,7 @@ export class ProductDetailComponent implements OnInit {
     console.log("productIdFromRoute", this.productIdFromRoute)
     if (this.testBrowser) {
       this.getProductDetails();
+      this.fetchReview(this.productIdFromRoute);
     }
   }
   
@@ -62,6 +64,21 @@ export class ProductDetailComponent implements OnInit {
      this.coolstoreCookiesService.saveUserLike(event, product);
      this.isProductLiked = true;
 
+  }
+
+  submitReview() {
+    this.coolstoreCookiesService.submitReview(this.currentProduct, this.reviewText);    
+    this.reviewText = '';
+  }
+  
+  reviewsList;
+  fetchReview(productIdFromRoute) {
+    console.log("fetchReview")
+    this.coolstoreCookiesService.getReviews(productIdFromRoute).subscribe(response => {
+      
+      this.reviewsList = response
+      console.log("this.reviewsList", this.reviewsList)
+  });
   }
    
   removeProductLike(event, product) {

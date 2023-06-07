@@ -6,6 +6,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import {  AuthStateResult, EventTypes, OidcClientNotification, OidcSecurityService, PublicEventsService } from 'angular-auth-oidc-client';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 import { HeaderComponent } from './header/header.component';
 import { AppComponent } from './app.component';
@@ -33,6 +35,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AuthConfigModule } from './auth-config.module';
 import { filter } from 'rxjs';
 import { DummyAuthPopUpService } from './dummy-auth-popup.service';
+import { ToastrModule } from 'ngx-toastr';
+
 
 
 export function initConfig(appConfig: AppConfigService) {
@@ -58,8 +62,8 @@ export function initConfig(appConfig: AppConfigService) {
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     FormsModule, ReactiveFormsModule,
-    AppRoutingModule, AuthConfigModule,
-    HttpClientModule,
+    AppRoutingModule, AuthConfigModule, BrowserAnimationsModule,
+    HttpClientModule, ToastrModule.forRoot(), 
     NgbModule
   ],
   providers: [
