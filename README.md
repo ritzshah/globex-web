@@ -13,8 +13,10 @@ export API_CATALOG_RECOMMENDED_PRODUCT_IDS="http://localhost:9000/score/product"
 export API_CART_SERVICE="http://localhost:9000/services/cart"
 export API_CUSTOMER_SERVICE="http://localhost:9000/services/customer/id/:custId"
 export API_ORDER_SERVICE="http://localhost:8080/web-gateway/services/order"
+
+#reviews specific
 export API_SAVE_PROD_REVIEW = "http://localhost:8080/review/submit"
-export API_FETCH_PROD_REVIEW = "http://localhost:8080/review/fetch"
+export API_FETCH_PROD_REVIEW = "http://localhost:8080/review/list"
   
 export SSO_CUSTOM_CONFIG="globex-web-gateway"
 export SSO_AUTHORITY="http://localhost:8180/realms/user1-globex_users"
@@ -25,5 +27,5 @@ export SSO_LOG_LEVEL=2
 
 ## docker
 
-docker build -t quay.io/globex-sentiment-analysis/globex-web-reviews:<tag> .
-docker push quay.io/globex-sentiment-analysis/globex-web-reviews:<tag> 
+docker build -t quay.io/globex-sentiment-analysis/globex-web-reviews:latest .
+docker push quay.io/globex-sentiment-analysis/globex-web-reviews:latest 

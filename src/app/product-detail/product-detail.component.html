@@ -38,11 +38,11 @@
         <h4>Customer reviews</h4>
             <ul style="list-style: none;">
                 <li class="card-body" *ngFor="let review of reviewsList">
-                    <i class="fa fa-user fa-2xl" style=" font-size: 24px; "></i>&nbsp; <strong>{{review.user.name}}</strong>
+                    <i class="fa fa-user fa-2xl" style=" font-size: 24px; "></i>&nbsp; <strong>{{review.userName}}</strong>
                     <br>
-                    Reviewed on {{review.timestamp | date}}
+                    Reviewed on {{review.reviewDate | date}}
                     <br>
-                    {{review.review_text}}
+                    {{review.reviewText}}
                 </li>
                 
                 
