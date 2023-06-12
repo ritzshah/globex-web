@@ -104,7 +104,12 @@ export class CoolstoreCookiesService {
   submitReview(product,reviewText) {
     product.liked = true;
     let prodReviewObj = {
-      "product_id": product.itemId,
+      "product" : {
+        "product_id": product.itemId,
+        "product_name": product.name,
+        "category": product.category
+      }
+      ,
       "user": {
         "name": "Alison Silva",
         "customer_id": "asilva",
