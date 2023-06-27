@@ -5,6 +5,7 @@ import { CoolstoreCookiesService } from '../coolstore-cookies.service';
 import { CoolStoreProductsService } from '../coolstore-products.service';
 import { ActivatedRoute } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { LoginService } from '../login.service';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class ProductDetailComponent implements OnInit {
   cookieService: CookieService;
   cartService:CartService;
   coolstoreCookiesService:CoolstoreCookiesService;
+  loginService: LoginService;
   
   productIdFromRoute:string;  
   currentProduct;
@@ -26,13 +28,14 @@ export class ProductDetailComponent implements OnInit {
   testBrowser: boolean;
   reviewText="";
   
-  constructor(coolStoreService:CoolStoreProductsService, cookieService: CookieService, 
+  constructor(coolStoreService:CoolStoreProductsService, cookieService: CookieService, loginService: LoginService, 
     coolstoreCookiesService:CoolstoreCookiesService, cartService:CartService, private route: ActivatedRoute, @Inject(PLATFORM_ID) platformId:string) {
     this.coolStoreService = coolStoreService;
     this.cartService = cartService;
     this.cookieService = cookieService;
     this.coolstoreCookiesService = coolstoreCookiesService;
     this.testBrowser = isPlatformBrowser(platformId);
+    this.loginService = loginService;
   }
 
   ngOnInit(): void {
