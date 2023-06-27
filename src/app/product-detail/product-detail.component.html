@@ -27,7 +27,7 @@
                             [disabled]="!loginService.isUserAuthenticated()"></textarea>
                     <div class="margin-top-10">
                         <button type="submit" class="btn btn-sm btn-primary pull-right margin-top-10" style="margin-top: 10px;" (click)="submitReview()"
-                        [disabled]="reviewText.length < 3 && !loginService.isUserAuthenticated()">
+                        [disabled]="reviewText.length < 3 || !loginService.isUserAuthenticated()">
                             Submit Review
                         </button>
                     </div>

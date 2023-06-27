@@ -8,6 +8,8 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { Router } from '@angular/router';
 import { catchError, Observable, of } from 'rxjs';
 import { HandleError, HttpErrorHandler } from '../http-error-handler.service';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-header',
@@ -28,7 +30,7 @@ export class HeaderComponent  implements OnInit{
 
 
   constructor(cartService: CartService, coolstoreCookiesService: CoolstoreCookiesService, loginService: LoginService,
-    customerService: CustomerService, private formBuilder: FormBuilder, private oidcSecurityService:OidcSecurityService,
+    customerService: CustomerService, private formBuilder: FormBuilder, private oidcSecurityService:OidcSecurityService, private toastr: ToastrService,
     private router: Router, httpErrorHandler: HttpErrorHandler) {
     this.cartService = cartService;
     this.coolstoreCookiesService = coolstoreCookiesService;
@@ -46,6 +48,7 @@ export class HeaderComponent  implements OnInit{
         catchError(this.handleError('oidcSecurityService', "checkAuth"));
         if (isAuthenticated) {
           this.navigateToStoredEndpoint();
+          this.toastr.success('Logged in!');
           this.login(userData["preferred_username"], accessToken);
         } else {
           this.loginService.setUserAuthenticated('', false);
