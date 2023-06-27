@@ -19,7 +19,7 @@ export API_SAVE_PROD_REVIEW = "http://localhost:8080/review/submit"
 export API_FETCH_PROD_REVIEW = "http://localhost:8080/review/list"
   
 export SSO_CUSTOM_CONFIG="globex-web-gateway"
-export SSO_AUTHORITY="http://localhost:8180/realms/user1-globex_users"
+export SSO_AUTHORITY="http://localhost:8180/realms/globex"
 export SSO_REDIRECT_LOGOUT_URI="http://localhost:4200/home"
 export SSO_LOG_LEVEL=2
 
@@ -27,5 +27,8 @@ export SSO_LOG_LEVEL=2
 
 ## docker
 
-docker build -t quay.io/globex-sentiment-analysis/globex-web-reviews:latest .
-docker push quay.io/globex-sentiment-analysis/globex-web-reviews:latest 
+docker build -t quay.io/globex-sentiment-analysis/globex-web-reviews:latest -t quay.io/globex-sentiment-analysis/globex-web-reviews:e79dff1 .
+docker push quay.io/globex-sentiment-analysis/globex-web-reviews:e79dff1
+docker push quay.io/globex-sentiment-analysis/globex-web-reviews:latest
+
+

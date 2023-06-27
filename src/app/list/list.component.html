@@ -29,13 +29,7 @@
 <!-- {{products | json}} -->
 
 <div class="card">
-  <div class="card-body">
-    <div class="container">
-      <div class="row row-cols-2 row-cols-md-4">
-        <app-item *ngFor="let product of products.products" [product]="product">
-        </app-item>
-      </div>
-    </div>
-
-  </div>
+  <div class="row card-group" style="padding-top: 10px;">
+    <app-item *ngFor="let product of products.products" [product]="product" class="col-md-3"></app-item>
+</div>
 </div>

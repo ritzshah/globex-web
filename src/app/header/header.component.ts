@@ -78,7 +78,11 @@ export class HeaderComponent  implements OnInit{
     this.showModal = false;
   }
   currentRoute:string;
-  
+
+  closeMenu() {
+    this.isMenuCollapsed = true;
+  }
+
   authenticateUser() {
     this.currentRoute = this.router.url;
     this.write('redirect', this.router.url);
