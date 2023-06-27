@@ -6,7 +6,7 @@ import { CoolStoreProductsService } from '../coolstore-products.service';
 import { ActivatedRoute } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { LoginService } from '../login.service';
-
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-product-detail',
@@ -46,7 +46,7 @@ export class ProductDetailComponent implements OnInit {
     if (this.testBrowser) {
       this.getProductDetails();
       this.fetchReview(this.productIdFromRoute);
-    }
+    }    
   }
   
   getProductDetails() {
@@ -76,12 +76,16 @@ export class ProductDetailComponent implements OnInit {
   
   reviewsList;
   fetchReview(productIdFromRoute) {
-    console.log("fetchReview")
-    this.coolstoreCookiesService.getReviews(productIdFromRoute).subscribe(response => {
-      
-      this.reviewsList = response
-      console.log("this.reviewsList", this.reviewsList)
-  });
+    
+      interval(8000).subscribe(x => {
+        this.coolstoreCookiesService.getReviews(productIdFromRoute).subscribe(response => {
+          this.reviewsList = response
+          console.log("this.reviewsList", this.reviewsList)
+        });    
+      });
+    
+    
+    
   }
    
   removeProductLike(event, product) {
