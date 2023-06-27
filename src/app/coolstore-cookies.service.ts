@@ -9,6 +9,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HandleError, HttpErrorHandler } from './http-error-handler.service';
 import { catchError, Observable, timestamp } from 'rxjs';
 import serverEnvConfig from 'client.env.config';
+import { CustomerService } from './customer.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,9 @@ export class CoolstoreCookiesService {
   userActivityObj;
 
 
-  constructor(cookieService: CookieService, private route: ActivatedRoute, http: HttpClient, httpErrorHandler: HttpErrorHandler, private toastr: ToastrService) {
+  constructor(cookieService: CookieService, private route: ActivatedRoute, http: HttpClient, httpErrorHandler: HttpErrorHandler, 
+    private customerService: CustomerService, private toastr: ToastrService) {
+
     this.cookieService = cookieService;
     this.http = http;
     this.handleError = httpErrorHandler.createHandleError('CoolstoreCookiesService');
@@ -101,8 +104,7 @@ export class CoolstoreCookiesService {
 
   }
 
-  submitReview(product,reviewText) {
-    product.liked = true;
+  submitReview(product,reviewText, user) {
     let prodReviewObj = {
       "product" : {
         "product_id": product.itemId,
@@ -111,8 +113,8 @@ export class CoolstoreCookiesService {
       }
       ,
       "user": {
-        "name": "Alison Silva",
-        "customer_id": "asilva",
+        "name": "",
+        "customer_id": "",
         "browser": "Chrome",
         "region": "India"
       },
@@ -121,12 +123,21 @@ export class CoolstoreCookiesService {
       "review_text": reviewText
       
     }
+    this.customerService.getCustomerInfo(user)
+      .subscribe(c => {
+        prodReviewObj.user.name =  c.firstName + " " + c.lastName;
+        prodReviewObj.user.customer_id = user;
+        prodReviewObj.user.region = c.address.country;
+        this.saveReview(prodReviewObj).subscribe(response => {
+          console.log("CoolstoreService >> submitReview >> resonse", response)
+          this.toastr.success('Your review has been submitted!', 'Thank you');
+  
+      });
+        
+      })
+    
 
-    this.saveReview(prodReviewObj).subscribe(response => {
-        console.log("CoolstoreService >> submitReview >> resonse", response)
-        this.toastr.success('Your review has been submitted!', 'Thank you');
-
-    });
+    
   }
 
   saveReview(prodReviewObj): Observable<any> {

@@ -70,7 +70,7 @@ export class ProductDetailComponent implements OnInit {
   }
 
   submitReview() {
-    this.coolstoreCookiesService.submitReview(this.currentProduct, this.reviewText);    
+    this.coolstoreCookiesService.submitReview(this.currentProduct, this.reviewText,this.loginService.getAuthenticatedUser());    
     this.reviewText = '';
   }
   
