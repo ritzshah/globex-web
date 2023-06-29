@@ -48,7 +48,7 @@ export class HeaderComponent  implements OnInit{
         catchError(this.handleError('oidcSecurityService', "checkAuth"));
         if (isAuthenticated) {
           this.navigateToStoredEndpoint();
-          this.toastr.success('Logged in!');
+          //this.toastr.success('Logged in!');
           this.login(userData["preferred_username"], accessToken);
         } else {
           this.loginService.setUserAuthenticated('', false);
@@ -86,8 +86,10 @@ export class HeaderComponent  implements OnInit{
     this.isMenuCollapsed = true;
   }
 
+  showLoginSuccess = false;
   authenticateUser() {
     this.currentRoute = this.router.url;
+    this.showLoginSuccess = true;
     this.write('redirect', this.router.url);
     
     this.oidcSecurityService.authorize();

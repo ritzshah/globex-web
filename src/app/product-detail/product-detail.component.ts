@@ -3,7 +3,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { CartService } from '../cart.service';
 import { CoolstoreCookiesService } from '../coolstore-cookies.service';
 import { CoolStoreProductsService } from '../coolstore-products.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { LoginService } from '../login.service';
 import { interval } from 'rxjs';
@@ -28,7 +28,7 @@ export class ProductDetailComponent implements OnInit {
   testBrowser: boolean;
   reviewText="";
   
-  constructor(coolStoreService:CoolStoreProductsService, cookieService: CookieService, loginService: LoginService, 
+  constructor(coolStoreService:CoolStoreProductsService, cookieService: CookieService, loginService: LoginService, private router: Router,
     coolstoreCookiesService:CoolstoreCookiesService, cartService:CartService, private route: ActivatedRoute, @Inject(PLATFORM_ID) platformId:string) {
     this.coolStoreService = coolStoreService;
     this.cartService = cartService;
@@ -46,8 +46,10 @@ export class ProductDetailComponent implements OnInit {
     if (this.testBrowser) {
       this.getProductDetails();
       this.fetchReview(this.productIdFromRoute);
+      
     }    
   }
+
   
   getProductDetails() {
     this.coolStoreService.getProductDetailsByIds(this.productIdFromRoute)
